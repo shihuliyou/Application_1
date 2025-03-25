@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                     } else if (bmi >= 18.5 && bmi < 24.9) {
                         suggestion = "正常：建议继续保持";
                     } else if (bmi >= 25 && bmi < 29.9) {
-                        suggestion = "超重：建议适量运动";
+                        suggestion = "超重：建议运动";
                     } else {
                         suggestion = "肥胖：建议积极锻炼，控制饮食";
                     }
