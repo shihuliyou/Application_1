@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.application_1"
+    namespace = "com.example.application_2"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.application_1"
+        applicationId = "com.example.application_2"
         minSdk = 35
         targetSdk = 35
         versionCode = 1
@@ -35,12 +35,7 @@ dependencies {
 
     implementation(libs.appcompat)
     implementation(libs.material)
-    implementation(libs.activity)
-    implementation(libs.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("net.objecthunter:exp4j:0.4.8")
-    implementation ("org.jsoup:jsoup:1.14.3")
-
 }
