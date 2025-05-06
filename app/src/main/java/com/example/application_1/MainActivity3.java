@@ -2,6 +2,8 @@ package com.example.application_1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -26,9 +28,11 @@ public class MainActivity3 extends AppCompatActivity {
     private Button buttonConvert;
     private HashMap<String, Double> exchangeRates = new HashMap<>();
     private String[] supportedCurrencies = {"美元", "欧元", "日元", "港币", "英镑", "澳大利亚元", "新西兰元", "新加坡元"};
+    private Button buttonShowRates;
 
     private static final String TARGET_URL = "https://www.huilvbiao.com/mid/";
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +43,17 @@ public class MainActivity3 extends AppCompatActivity {
         spinnerCurrency = findViewById(R.id.spinner_currency);
         textViewResult = findViewById(R.id.textView_result);
         buttonConvert = findViewById(R.id.button_convert);
+        buttonShowRates = findViewById(R.id.button_show_rates);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, supportedCurrencies);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCurrency.setAdapter(adapter);
+
+        buttonShowRates.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity3.this, RateList.class);
+            startActivity(intent);
+        });
 
         buttonConvert.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +83,7 @@ public class MainActivity3 extends AppCompatActivity {
                                     .get();
                             Element lprDiv = doc.select("div.lpr").first();
                             if(lprDiv == null){
-                                throw new Exception("未找到包含汇率数据的区域");
+                                throw new Exception("未找到汇率");
                             }
                             exchangeRates.clear();
                             Pattern pattern = Pattern.compile("^([1-9]\\d*|100)([^\\d]+)对([\\d\\.]+)人民币$");
@@ -96,14 +106,14 @@ public class MainActivity3 extends AppCompatActivity {
                             }
                             if(!exchangeRates.containsKey(targetCurrency)) {
                                 runOnUiThread(() ->
-                                        textViewResult.setText("未找到" + targetCurrency + "汇率数据")
+                                        textViewResult.setText("未找到" + targetCurrency + "汇率.0")
                                 );
                                 return;
                             }
                             final double targetRate = exchangeRates.get(targetCurrency);
                             final double convertedAmount = rmbAmount / targetRate;
                             runOnUiThread(() -> {
-                                String result = String.format("%.2f RMB = %.2f %s", rmbAmount, convertedAmount, targetCurrency);
+                                String result = String.format("%.4f RMB = %.4f %s", rmbAmount, convertedAmount, targetCurrency);
                                 textViewResult.setText(result);
                             });
                         } catch (IOException e) {
