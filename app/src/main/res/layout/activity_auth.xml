@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tvAuthTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="用户登录 / 注册"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/editEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:hint="请输入邮箱"
+        android:inputType="textEmailAddress"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_bg"
+        app:layout_constraintTop_toBottomOf="@id/tvAuthTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/editPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="请输入密码（至少6位）"
+        android:inputType="textPassword"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_bg"
+        app:layout_constraintTop_toBottomOf="@id/editEmail"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="注册"
+        android:padding="12dp"
+        android:backgroundTint="@color/teal_200"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/editPassword"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="登录"
+        android:padding="12dp"
+        android:backgroundTint="@color/black"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/btnRegister"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/btnGoogle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/btnLogin"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

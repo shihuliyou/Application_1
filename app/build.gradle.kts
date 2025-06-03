@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -14,6 +15,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+        isCoreLibraryDesugaringEnabled = true
     }
 
     buildTypes {
@@ -32,15 +39,30 @@ android {
 }
 
 dependencies {
-
+    implementation(platform(libs.firebase.bom))
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.firebase.analytics)
+    implementation(libs.play.services.tasks)
+    implementation(libs.firebase.auth)
+    implementation(libs.credentials)
+    implementation(libs.credentials.play.services.auth)
+    implementation(libs.googleid)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("net.objecthunter:exp4j:0.4.8")
-    implementation ("org.jsoup:jsoup:1.14.3")
+    implementation(libs.exp4j)
+    implementation (libs.jsoup)
+    implementation (libs.material)
+    // Firebase / Google Play Services 样例依赖
+    implementation(libs.play.services.auth)
+    implementation(libs.firebase.auth)
+    implementation(libs.play.services.tasks)
+    implementation(libs.play.services.basement)
+
+    // 核心库反糖的实现库（一定要放在 implementation 之后）
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
 
 }

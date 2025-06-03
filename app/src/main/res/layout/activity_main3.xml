@@ -1,94 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <!-- 标题栏 -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@android:color/white">
+        android:background="@color/purple_500"
+        app:title="My Application"
+        app:titleTextColor="@android:color/white" />
 
-        <!-- 页面标题 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="汇率转换器"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:paddingBottom="12dp"/>
+    <!-- 新增：TabLayout 显示当前页并可点击切换 -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabMode="fixed"
+        app:tabGravity="fill"/>
 
-        <!-- 人民币金额输入 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="人民币金额："
-            android:textSize="16sp" />
+    <!-- 原来的 ViewPager2 -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
-        <EditText
-            android:id="@+id/editText_amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:hint="请输入金额"
-            android:layout_marginTop="4dp"
-            android:padding="8dp"
-            android:background="@android:drawable/editbox_background" />
-
-        <!-- 币种选择 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="目标币种："
-            android:textSize="16sp"
-            android:layout_marginTop="16dp" />
-
-        <Spinner
-            android:id="@+id/spinner_currency"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp" />
-
-        <!-- 操作按钮组 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
-
-            <Button
-                android:id="@+id/button_convert"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="获取并转换"
-                android:padding="8dp"/>
-
-            <View
-                android:layout_width="12dp"
-                android:layout_height="0dp"/>
-
-            <Button
-                android:id="@+id/button_show_rates"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="查看汇率列表"
-                android:padding="8dp"/>
-        </LinearLayout>
-
-        <!-- 转换结果 -->
-        <TextView
-            android:id="@+id/textView_result"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="转换结果："
-            android:textSize="16sp"
-            android:background="#F0F0F0"
-            android:padding="12dp"
-            android:layout_marginTop="20dp"/>
-
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

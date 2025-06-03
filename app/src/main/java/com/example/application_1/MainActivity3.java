@@ -1,135 +1,57 @@
 package com.example.application_1;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Button;
-import android.view.View;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity3 extends AppCompatActivity {
-    private EditText editTextAmount;
-    private Spinner spinnerCurrency;
-    private TextView textViewResult;
-    private Button buttonConvert;
-    private HashMap<String, Double> exchangeRates = new HashMap<>();
-    private String[] supportedCurrencies = {"美元", "欧元", "日元", "港币", "英镑", "澳大利亚元", "新西兰元", "新加坡元"};
-    private Button buttonShowRates;
 
-    private static final String TARGET_URL = "https://www.huilvbiao.com/mid/";
+    private static final int PAGE_COUNT = 3;
+    private ViewPager2 viewPager;
+    private TabLayout tabLayout;
+    private final String[] TAB_TITLES = { "第一页", "第二页", "第三页" };
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
 
-        // 绑定UI组件
-        editTextAmount = findViewById(R.id.editText_amount);
-        spinnerCurrency = findViewById(R.id.spinner_currency);
-        textViewResult = findViewById(R.id.textView_result);
-        buttonConvert = findViewById(R.id.button_convert);
-        buttonShowRates = findViewById(R.id.button_show_rates);
+        viewPager  = findViewById(R.id.viewPager);
+        tabLayout  = findViewById(R.id.tabLayout);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, supportedCurrencies);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCurrency.setAdapter(adapter);
+        // 1. 给 ViewPager2 设置 Adapter
+        viewPager.setAdapter(new ScreenSlidePagerAdapter(this));
 
-        buttonShowRates.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity3.this, RateList.class);
-            startActivity(intent);
-        });
-
-        buttonConvert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final String inputStr = editTextAmount.getText().toString().trim();
-                if(inputStr.isEmpty()){
-                    textViewResult.setText("请输入金额");
-                    return;
-                }
-
-                final double rmbAmount;
-                try {
-                    rmbAmount = Double.parseDouble(inputStr);
-                } catch (NumberFormatException e) {
-                    textViewResult.setText("金额格式不正确");
-                    return;
-                }
-
-                final String targetCurrency = spinnerCurrency.getSelectedItem().toString();
-                new Thread(new Runnable() {
+        // 2. 通过 TabLayoutMediator 关联 TabLayout 和 ViewPager2
+        new TabLayoutMediator(tabLayout, viewPager,
+                new TabLayoutMediator.TabConfigurationStrategy() {
                     @Override
-                    public void run() {
-                        try {
-                            Document doc = Jsoup.connect(TARGET_URL)
-                                    .header("User-Agent", "Mozilla/5.0")
-                                    .get();
-                            Element lprDiv = doc.select("div.lpr").first();
-                            if(lprDiv == null){
-                                throw new Exception("未找到汇率");
-                            }
-                            exchangeRates.clear();
-                            Pattern pattern = Pattern.compile("^([1-9]\\d*|100)([^\\d]+)对([\\d\\.]+)人民币$");
-                            Elements ps = lprDiv.select("p");
-                            for (Element p : ps) {
-                                String text = p.text().trim();
-                                Matcher m = pattern.matcher(text);
-                                if(m.find()){
-                                    String prefix = m.group(1);
-                                    String currencyName = m.group(2);
-                                    currencyName = currencyName.replace("对", "").trim();
-                                    String rateValueStr = m.group(3);
-                                    double rateValue = Double.parseDouble(rateValueStr);
-                                    double unitRate = rateValue;
-                                    if(prefix.equals("100")){
-                                        unitRate = rateValue / 100.0;
-                                    }
-                                    exchangeRates.put(currencyName, unitRate);
-                                }
-                            }
-                            if(!exchangeRates.containsKey(targetCurrency)) {
-                                runOnUiThread(() ->
-                                        textViewResult.setText("未找到" + targetCurrency + "汇率.0")
-                                );
-                                return;
-                            }
-                            final double targetRate = exchangeRates.get(targetCurrency);
-                            final double convertedAmount = rmbAmount / targetRate;
-                            runOnUiThread(() -> {
-                                String result = String.format("%.4f RMB = %.4f %s", rmbAmount, convertedAmount, targetCurrency);
-                                textViewResult.setText(result);
-                            });
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            runOnUiThread(() ->
-                                    textViewResult.setText("获取数据出错")
-                            );
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            runOnUiThread(() ->
-                                    textViewResult.setText(e.getMessage())
-                            );
-                        }
+                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                        // 设置每个 Tab 的标题
+                        tab.setText(TAB_TITLES[position]);
                     }
-                }).start();
-            }
-        });
+                }
+        ).attach();
+    }
+
+    private static class ScreenSlidePagerAdapter extends FragmentStateAdapter {
+        public ScreenSlidePagerAdapter(@NonNull AppCompatActivity fa) {
+            super(fa);
+        }
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            // 传给 Fragment 的位置参数（1、2、3）
+            return PageFragment.newInstance(position + 1);
+        }
+        @Override
+        public int getItemCount() {
+            return PAGE_COUNT;
+        }
     }
 }
